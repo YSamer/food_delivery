@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:food_delivery/components/utils/dimensions.dart';
+import 'package:food_delivery/core/utils/dimensions.dart';
 
 class AppIcon extends StatelessWidget {
   const AppIcon({

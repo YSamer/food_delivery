@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:food_delivery/components/utils/colors.dart';
+import 'package:food_delivery/core/utils/colors.dart';
 
 class SmallText extends StatelessWidget {
   final String text;

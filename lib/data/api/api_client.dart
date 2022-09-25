@@ -1,5 +1,6 @@
-import 'package:food_delivery/components/utils/app_constants.dart';
+import 'package:food_delivery/core/utils/app_constants.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 
 class ApiClient extends GetConnect implements GetxService {
   late String token;
@@ -16,13 +17,22 @@ class ApiClient extends GetConnect implements GetxService {
     };
   }
 
-  Future<Response> getDate(String url) async {
+  Future<dynamic> getDate(url) async {
     try {
-      Response response =
-          await get('https://mvs.bslmeiyu.com/api/v1/products/popular');
-      return response;
-    } catch (e) {
-      return Response(statusCode: 1, statusText: e.toString());
-    }
+      var response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        // print(response.body);
+        return response;
+      } else {}
+    } catch (e) {}
   }
+
+  // Future<Response> getDate(String url) async {
+  //   try {
+  //     Response response = await get(url);
+  //     return response;
+  //   } catch (e) {
+  //     return Response(statusCode: 1, statusText: e.toString());
+  //   }
+  // }
 }

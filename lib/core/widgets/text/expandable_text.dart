@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:food_delivery/components/utils/colors.dart';
-import 'package:food_delivery/components/utils/dimensions.dart';
-import 'package:food_delivery/components/widgets/text/small_text.dart';
+import 'package:food_delivery/core/utils/colors.dart';
+import 'package:food_delivery/core/utils/dimensions.dart';
+import 'package:food_delivery/core/widgets/text/small_text.dart';
 
 class ExpandableText extends StatefulWidget {
   const ExpandableText({
@@ -62,7 +62,7 @@ class _ExpandableTextState extends State<ExpandableText> {
                   child: Row(
                     children: [
                       SmallText(
-                        text: 'Show more',
+                        text: hiddenText ? 'Show more' : 'Show less',
                         color: mainColor,
                       ),
                       Icon(

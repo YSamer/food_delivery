@@ -1,26 +1,41 @@
 import 'package:flutter/material.dart';
-import 'package:food_delivery/components/utils/colors.dart';
-import 'package:food_delivery/components/utils/dimensions.dart';
-import 'package:food_delivery/components/widgets/mixed/app_icon.dart';
-import 'package:food_delivery/components/widgets/text/big_text.dart';
-import 'package:food_delivery/components/widgets/text/expandable_text.dart';
+import 'package:food_delivery/core/routes/routes.dart';
+import 'package:food_delivery/core/utils/app_constants.dart';
+import 'package:food_delivery/core/utils/colors.dart';
+import 'package:food_delivery/core/utils/dimensions.dart';
+import 'package:food_delivery/core/widgets/mixed/app_icon.dart';
+import 'package:food_delivery/core/widgets/text/big_text.dart';
+import 'package:food_delivery/core/widgets/text/expandable_text.dart';
+import 'package:food_delivery/controllers/recommended_product_controller.dart';
+import 'package:food_delivery/screens/home/main_food_page.dart';
+import 'package:get/get.dart';
 
 class RecommendedFoodDetails extends StatelessWidget {
-  const RecommendedFoodDetails({super.key});
-
+  const RecommendedFoodDetails({super.key, required this.index});
+  final int index;
   @override
   Widget build(BuildContext context) {
+    var product =
+        Get.find<RecommendedProductController>().recommendedProductList[index];
     return Scaffold(
       backgroundColor: Colors.white,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
+            automaticallyImplyLeading: false,
             toolbarHeight: 70,
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-                AppIcon(icon: Icons.clear),
-                AppIcon(icon: Icons.shopping_cart_outlined)
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Get.to(() => const MainFoodPage());
+                  },
+                  child: const AppIcon(
+                    icon: Icons.clear,
+                  ),
+                ),
+                const AppIcon(icon: Icons.shopping_cart_outlined)
               ],
             ),
             bottom: PreferredSize(
@@ -36,7 +51,7 @@ class RecommendedFoodDetails extends StatelessWidget {
                     )),
                 child: Center(
                     child: BigText(
-                  text: 'Chinese Cuisines',
+                  text: product.name!,
                   size: Dimensions.font26,
                 )),
               ),
@@ -45,8 +60,8 @@ class RecommendedFoodDetails extends StatelessWidget {
             backgroundColor: yellowColor,
             expandedHeight: 300,
             flexibleSpace: FlexibleSpaceBar(
-              background: Image.asset(
-                'assets/image/food0.png',
+              background: Image.network(
+                '${AppConstants.BASE_URL}/uploads/${product.img!}',
                 width: double.maxFinite,
                 fit: BoxFit.cover,
               ),
@@ -61,8 +76,7 @@ class RecommendedFoodDetails extends StatelessWidget {
                     right: Dimensions.width20,
                   ),
                   child: ExpandableText(
-                    text:
-                        '''Chinese cuisines seem to have mastered this art; hence you find most of their meals are accompanied by different side dishes. The side dishes could be a variety of raw or simple veggies to potato or soups or just anything that compliments or balance the main meal. Chinese cuisines seem to have mastered this art; hence you find most of their meals are accompanied by different side dishes. The side dishes could be a variety of raw or simple veggies to potato or soups or just anything that compliments or balance the main meal. Chinese cuisines seem to have mastered this art; hence you find most of their meals are accompanied by different side dishes. The side dishes could be a variety of raw or simple veggies to potato or soups or just anything that compliments or balance the main meal. Chinese cuisines seem to have mastered this art; hence you find most of their meals are accompanied by different side dishes. The side dishes could be a variety of raw or simple veggies to potato or soups or just anything that compliments or balance the main meal. Chinese cuisines seem to have mastered this art; hence you find most of their meals are accompanied by different side dishes. The side dishes could be a variety of raw or simple veggies to potato or soups or just anything that compliments or balance the main meal. Chinese cuisines seem to have mastered this art; hence you find most of their meals are accompanied by different side dishes. The side dishes could be a variety of raw or simple veggies to potato or soups or just anything that compliments or balance the main meal. Chinese cuisines seem to have mastered this art; hence you find most of their meals are accompanied by different side dishes. The side dishes could be a variety of raw or simple veggies to potato or soups or just anything that compliments or balance the main meal. Chinese cuisines seem to have mastered this art; hence you find most of their meals are accompanied by different side dishes. The side dishes could be a variety of raw or simple veggies to potato or soups or just anything that compliments or balance the main meal. Chinese cuisines seem to have mastered this art; hence you find most of their meals are accompanied by different side dishes. The side dishes could be a variety of raw or simple veggies to potato or soups or just anything that compliments or balance the main meal. Chinese cuisines seem to have mastered this art; hence you find most of their meals are accompanied by different side dishes. The side dishes could be a variety of raw or simple veggies to potato or soups or just anything that compliments or balance the main meal. Chinese cuisines seem to have mastered this art; hence you find most of their meals are accompanied by different side dishes. The side dishes could be a variety of raw or simple veggies to potato or soups or just anything that compliments or balance the main meal. Chinese cuisines seem to have mastered this art; hence you find most of their meals are accompanied by different side dishes. The side dishes could be a variety of raw or simple veggies to potato or soups or just anything that compliments or balance the main meal. Chinese cuisines seem to have mastered this art; hence you find most of their meals are accompanied by different side dishes. The side dishes could be a variety of raw or simple veggies to potato or soups or just anything that compliments or balance the main meal. Chinese cuisines seem to have mastered this art; hence you find most of their meals are accompanied by different side dishes. The side dishes could be a variety of raw or simple veggies to potato or soups or just anything that compliments or balance the main meal. Chinese cuisines seem to have mastered this art; hence you find most of their meals are accompanied by different side dishes. The side dishes could be a variety of raw or simple veggies to potato or soups or just anything that compliments or balance the main meal. Chinese cuisines seem to have mastered this art; hence you find most of their meals are accompanied by different side dishes. The side dishes could be a variety of raw or simple veggies to potato or soups or just anything that compliments or balance the main meal.''',
+                    text: product.description!,
                   ),
                 ),
               ],
@@ -90,7 +104,7 @@ class RecommendedFoodDetails extends StatelessWidget {
                   iconSize: Dimensions.size24,
                 ),
                 BigText(
-                  text: '\$12.88 X 0',
+                  text: '\$${product.price!} X 0',
                   color: mainBlackColor,
                   size: Dimensions.font26,
                 ),
@@ -132,7 +146,7 @@ class RecommendedFoodDetails extends StatelessWidget {
                       borderRadius: BorderRadius.circular(Dimensions.radius20),
                       color: Colors.white,
                     ),
-                    child: Icon(
+                    child: const Icon(
                       Icons.favorite,
                       color: mainColor,
                     )),
@@ -148,7 +162,7 @@ class RecommendedFoodDetails extends StatelessWidget {
                     color: mainColor,
                   ),
                   child: BigText(
-                    text: '\$10 | Add to Cart',
+                    text: '\$${product.price!} | Add to Cart',
                     color: Colors.white,
                   ),
                 ),

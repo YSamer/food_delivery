@@ -2,13 +2,13 @@ import 'package:food_delivery/core/utils/app_constants.dart';
 import 'package:food_delivery/data/api/api_client.dart';
 import 'package:get/get.dart';
 
-class PopularProductRepo extends GetxService {
+class RecommendedProductRepo extends GetxService {
   final ApiClient apiClient;
 
-  PopularProductRepo({required this.apiClient});
+  RecommendedProductRepo({required this.apiClient});
 
   Future<dynamic> getRecommendedProductList() async {
     return await apiClient
-        .getDate(AppConstants.BASE_URL + AppConstants.POPULAR_PRODUCT_URL);
+        .getDate(AppConstants.BASE_URL + AppConstants.RECOMMENDED_PRODUCT_URL);
   }
 }
