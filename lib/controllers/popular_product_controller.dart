@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:food_delivery/controllers/cart_controller.dart';
 import 'package:food_delivery/core/utils/colors.dart';
 import 'package:food_delivery/data/api/popular_product_repo.dart';
+import 'package:food_delivery/models/cart_model.dart';
 import 'package:food_delivery/models/products_model.dart';
 import 'package:get/get.dart';
 
@@ -46,15 +47,19 @@ class PopularProductController extends GetxController {
   }
 
   int checkQuantity(int quantity) {
-    if (quantity < 0) {
+    if ((_inCartItems + quantity) < 0) {
       Get.snackbar(
         'Item Count',
         'You Can\'t reduce more !',
         backgroundColor: mainColor,
         colorText: Colors.white,
       );
+      if (_inCartItems > 0) {
+        _quantity = -_inCartItems;
+        return quantity;
+      }
       return 0;
-    } else if (quantity > 20) {
+    } else if ((_inCartItems + quantity) > 20) {
       Get.snackbar(
         'Item Count',
         'You Can\'t add more !',
@@ -67,13 +72,31 @@ class PopularProductController extends GetxController {
     }
   }
 
-  void initProduct(CartController cart) {
+  void initProduct(ProductModel product, CartController cart) {
     _quantity = 0;
     _inCartItems = 0;
     _cart = cart;
+    var exist = false;
+    exist = _cart.existInCart(product);
+
+    if (exist) {
+      _inCartItems = _cart.getQuantity(product);
+    }
   }
 
   void addItem(ProductModel product) {
     _cart.addItem(product, _quantity);
+    _quantity = 0;
+    _inCartItems = _cart.getQuantity(product);
+
+    update();
+  }
+
+  int get totalItems {
+    return _cart.totalItems;
+  }
+
+  List<CartModel> get getItems {
+    return _cart.getItems;
   }
 }
