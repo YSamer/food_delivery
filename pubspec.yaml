@@ -37,8 +37,10 @@ dependencies:
   dots_indicator: ^2.1.0
   get: ^4.6.5
   # http: ^0.13.5
-  http: ^0.13.4
+  http: ^0.13.5
   flutter_riverpod: ^1.0.3
+  persistent_bottom_nav_bar: ^5.0.2
+  shared_preferences: ^2.0.15
 
 
 dev_dependencies:

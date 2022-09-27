@@ -51,15 +51,15 @@ class _MainFoodBodyState extends State<MainFoodBody> {
         //Slider
         GetBuilder<PopularProductController>(
           builder: (popularProducts) {
+            var products = popularProducts.popularProductList;
             return popularProducts.isLoaded
                 ? SizedBox(
                     height: Dimensions.pageView,
                     child: PageView.builder(
                       controller: pageController,
-                      itemCount: popularProducts.popularProductList.length,
+                      itemCount: products.length,
                       itemBuilder: (context, index) {
-                        return BuildFoodItem(
-                            index, popularProducts.popularProductList[index]);
+                        return BuildFoodItem(index, products[index]);
                       },
                     ),
                   )
@@ -69,10 +69,9 @@ class _MainFoodBodyState extends State<MainFoodBody> {
         //Dots
         GetBuilder<PopularProductController>(
           builder: (popularProducts) {
+            var products = popularProducts.popularProductList;
             return DotsIndicator(
-              dotsCount: popularProducts.popularProductList.isEmpty
-                  ? 1
-                  : popularProducts.popularProductList.length,
+              dotsCount: products.isEmpty ? 1 : products.length,
               position: _currPageValue,
               decorator: DotsDecorator(
                 activeColor: mainColor,
@@ -110,16 +109,23 @@ class _MainFoodBodyState extends State<MainFoodBody> {
         //List of foods
         GetBuilder<RecommendedProductController>(
           builder: (recommendedProducts) {
+            var products = recommendedProducts.recommendedProductList;
             return recommendedProducts.isLoaded
                 ? ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemCount:
-                        recommendedProducts.recommendedProductList.length,
+                    itemCount: products.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
-                          Get.to(() => RecommendedFoodDetails(index: index));
+                          Get.to(
+                            () => RecommendedFoodDetails(
+                                index: products[index].id!),
+                            arguments: {
+                              'page': 'main',
+                              'index': products[index].id!
+                            },
+                          );
                         },
                         child: Container(
                           margin: EdgeInsets.only(
@@ -140,7 +146,7 @@ class _MainFoodBodyState extends State<MainFoodBody> {
                                   image: DecorationImage(
                                     fit: BoxFit.cover,
                                     image: NetworkImage(
-                                      '${AppConstants.BASE_URL}/uploads/${recommendedProducts.recommendedProductList[index].img!}',
+                                      '${AppConstants.BASE_URL}/uploads/${products[index].img!}',
                                     ),
                                   ),
                                 ),
@@ -170,9 +176,7 @@ class _MainFoodBodyState extends State<MainFoodBody> {
                                           MainAxisAlignment.center,
                                       children: [
                                         BigText(
-                                          text: recommendedProducts
-                                              .recommendedProductList[index]
-                                              .name!,
+                                          text: products[index].name!,
                                         ),
                                         SizedBox(height: Dimensions.height10),
                                         SmallText(
@@ -246,7 +250,10 @@ class _MainFoodBodyState extends State<MainFoodBody> {
 
     return GestureDetector(
       onTap: () {
-        Get.to(() => PopularFoodDetails(index: index));
+        Get.to(
+          () => PopularFoodDetails(index: product.id!),
+          arguments: {'page': 'main', 'index': product.id!},
+        );
       },
       child: Transform(
         transform: matrix,

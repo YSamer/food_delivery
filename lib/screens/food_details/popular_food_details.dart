@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/controllers/cart_controller.dart';
+import 'package:food_delivery/controllers/products_controller.dart';
 import 'package:food_delivery/core/utils/app_constants.dart';
 import 'package:food_delivery/core/utils/colors.dart';
 import 'package:food_delivery/core/utils/dimensions.dart';
@@ -7,22 +8,26 @@ import 'package:food_delivery/core/widgets/mixed/app_icon.dart';
 import 'package:food_delivery/core/widgets/mixed/app_column.dart';
 import 'package:food_delivery/core/widgets/text/big_text.dart';
 import 'package:food_delivery/core/widgets/text/expandable_text.dart';
-import 'package:food_delivery/controllers/popular_product_controller.dart';
-import 'package:food_delivery/data/cart/cart_repo.dart';
 import 'package:food_delivery/screens/cart/cart_screen.dart';
 import 'package:food_delivery/screens/home/main_food_page.dart';
 import 'package:get/get.dart';
 
 class PopularFoodDetails extends StatelessWidget {
   const PopularFoodDetails({super.key, required this.index});
-
   final int index;
-
   @override
   Widget build(BuildContext context) {
+    final source_page = Get.arguments['page'];
+    final source_index = Get.arguments['index'];
     var product =
-        Get.find<PopularProductController>().popularProductList[index];
-    Get.find<PopularProductController>()
+        Get.find<ProductsController>().popularProductList.firstWhere((element) {
+      if (element.id == index) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+    Get.find<ProductsController>()
         .initProduct(product, Get.find<CartController>());
     return Scaffold(
       backgroundColor: Colors.white,
@@ -53,22 +58,29 @@ class PopularFoodDetails extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Get.to(() => const MainFoodPage());
+                    if (source_page == 'cart') {
+                      Get.to(() => const CartScreen(),arguments: {'page': 'popular', 'index': product.id!},);
+                    } else if (source_page == 'main') {
+                      Get.to(() => const MainFoodPage());
+                    }
                   },
                   child: const AppIcon(
                     icon: Icons.arrow_back_ios,
                   ),
                 ),
-                GetBuilder<PopularProductController>(
+                GetBuilder<ProductsController>(
                   builder: (controller) {
                     return GestureDetector(
                       onTap: () {
-                        Get.to(() => const CartScreen());
+                        Get.to(
+                          () => const CartScreen(),
+                          arguments: {'page': 'popular', 'index': product.id!},
+                        );
                       },
                       child: Stack(
                         children: [
                           const AppIcon(icon: Icons.shopping_cart_outlined),
-                          Get.find<PopularProductController>().totalItems >= 1
+                          Get.find<ProductsController>().totalItems >= 1
                               ? const Positioned(
                                   right: 0,
                                   top: 0,
@@ -80,12 +92,12 @@ class PopularFoodDetails extends StatelessWidget {
                                   ),
                                 )
                               : Container(),
-                          Get.find<PopularProductController>().totalItems >= 1
+                          Get.find<ProductsController>().totalItems >= 1
                               ? Positioned(
                                   right: 3,
                                   top: 3,
                                   child: BigText(
-                                    text: Get.find<PopularProductController>()
+                                    text: Get.find<ProductsController>()
                                         .totalItems
                                         .toString(),
                                     size: 12,
@@ -139,8 +151,8 @@ class PopularFoodDetails extends StatelessWidget {
           ),
         ],
       ),
-      bottomNavigationBar: GetBuilder<PopularProductController>(
-        builder: (popularProduct) {
+      bottomNavigationBar: GetBuilder<ProductsController>(
+        builder: (products) {
           return Container(
             height: Dimensions.bottomHeightBar,
             padding: EdgeInsets.only(
@@ -174,16 +186,16 @@ class PopularFoodDetails extends StatelessWidget {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          popularProduct.setQuantity(false);
+                          products.setQuantity(false);
                         },
                         child: const Icon(Icons.remove, color: signColor),
                       ),
                       SizedBox(width: Dimensions.width5),
-                      BigText(text: '${popularProduct.inCartItems}'),
+                      BigText(text: '${products.inCartItems}'),
                       SizedBox(width: Dimensions.width5),
                       GestureDetector(
                         onTap: () {
-                          popularProduct.setQuantity(true);
+                          products.setQuantity(true);
                         },
                         child: const Icon(Icons.add, color: signColor),
                       ),
@@ -192,7 +204,7 @@ class PopularFoodDetails extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    popularProduct.addItem(product);
+                    products.addItem(product);
                   },
                   child: Container(
                     padding: EdgeInsets.only(
